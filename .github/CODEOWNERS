@@ -1,0 +1,17 @@
+# CODEOWNERS — automatic PR reviewers for xfarch/aikit.
+#
+# Format: <path-glob>  <owner>...
+# Owners are auto-requested for review on every PR touching the path.
+# The last matching line wins, so put more specific rules at the bottom.
+
+* @isramatrix
+
+# Plugin manifest — schema changes here affect every plugin consumer.
+/plugin.json           @isramatrix
+
+# Claude instructions and skills — content that shapes AI behaviour.
+/skills/               @isramatrix
+/instructions/         @isramatrix
+
+# CI tooling.
+/.github/              @isramatrix

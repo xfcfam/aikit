@@ -1,0 +1,39 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Lint markdown
+        run: |
+          npm install -g markdownlint-cli@0.42.0
+          markdownlint '**/*.md' --ignore node_modules --ignore '**/CHANGELOG.md' || true
+
+      - name: Validate Claude plugin manifest (if present)
+        run: |
+          if [ -f plugin.json ] || [ -f claude-plugin.json ]; then
+            manifest=$(ls plugin.json claude-plugin.json 2>/dev/null | head -1)
+            echo "Validating $manifest"
+            jq empty "$manifest"
+            echo "✓ manifest is valid JSON"
+          else
+            echo "(no plugin manifest found — skipping)"
+          fi
