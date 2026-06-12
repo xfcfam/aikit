@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-This repository contains the **xfarch/aikit** Claude plugin —
+This repository contains the **xfcfam/aikit** Claude plugin —
 instructions, skills, and the plugin manifest that ship to Claude
 users. Only the latest published version receives security updates.
 
@@ -31,7 +31,7 @@ Use one of:
 1. **GitHub private vulnerability reporting** (preferred) — repository
    **Security** tab → **"Report a vulnerability"**. Private to the
    maintainers.
-2. **Email** — `security@xfarch.org` (PGP key on request).
+2. **Email** — `security@xfcfam.org` (PGP key on request).
 
 We aim to acknowledge reports within **72 hours** and provide an
 initial assessment within **7 days**. Fixes are coordinated with the

@@ -1,0 +1,63 @@
+name: catalogue-sync
+
+# Validates that the shared rule catalogue in plugin/skills/_shared/ matches
+# the upstream sources in xfcfam/tools (README.md and RULES.md). If a PR
+# changes the rule catalogue upstream but doesn't run bin/sync-from-spec.sh
+# locally, this job fails and prompts the contributor to resync.
+#
+# Run modes:
+#   - PR / push to main: clones xfcfam/tools at HEAD and diffs.
+#   - Workflow dispatch: same, but lets the operator pick a tools ref.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'plugin/skills/_shared/**'
+      - 'bin/sync-from-spec.sh'
+      - '.github/workflows/catalogue-sync.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'plugin/skills/_shared/**'
+      - 'bin/sync-from-spec.sh'
+      - '.github/workflows/catalogue-sync.yml'
+  workflow_dispatch:
+    inputs:
+      tools_ref:
+        description: 'Branch / tag / SHA of xfcfam/tools to compare against'
+        required: false
+        default: 'main'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-sync:
+    name: shared catalogue is in sync with xfcfam/tools
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout aikit
+        uses: actions/checkout@v4
+        with:
+          path: aikit
+
+      - name: Checkout xfcfam/tools
+        uses: actions/checkout@v4
+        with:
+          repository: xfcfam/tools
+          ref: ${{ github.event.inputs.tools_ref || 'main' }}
+          path: tools
+
+      - name: Re-run sync into a scratch directory
+        run: |
+          mkdir -p /tmp/expected
+          cp tools/README.md /tmp/expected/catalogue.md
+          cp tools/RULES.md  /tmp/expected/rules-detail.md
+
+      - name: Compare against shipped catalogue
+        run: |
+          diff -u /tmp/expected/catalogue.md     aikit/plugin/skills/_shared/catalogue.md
+          diff -u /tmp/expected/rules-detail.md  aikit/plugin/skills/_shared/rules-detail.md
+          echo "✓ shared catalogue is in sync with xfcfam/tools"

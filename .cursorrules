@@ -1,0 +1,62 @@
+# XF Architecture Model — Cursor Rules
+# Full spec: see INSTRUCTIONS.md and CLAUDE.md in this directory.
+
+## Architecture
+
+This project follows the XF Architecture Model (CFAM):
+- 3 layers: Access (repository/) → Business (business/) → Interaction (api/)
+- 5 types per layer: Logical · Generalization · Injection · Utility · Transfer
+- 3 injectors: R (Access) · B (Business) · A (Interaction)
+- Dependencies flow DOWNWARD ONLY. No upward or lateral layer calls.
+
+## Mandatory rules
+
+- NEVER call Access (R.*) from Interaction directly — go through Business (B.*).
+- NEVER instantiate Logical components with `new`. Use R.x, B.x, A.x.
+- NEVER put logic in Transfer objects. Transfers are data-only.
+- NEVER put state or I/O in Utility components. Utilities are pure functions.
+- ALWAYS register new Logical components in their layer's injector (R, B, or A).
+- Init order at startup: R.init() → B.init() → A.init() (via XF.init()). Injections are static, non-instantiable.
+
+## Naming
+
+- Access Logical    → <Concept>Repository   (UserRepository)
+- Business Logical  → <Concept>Business     (UserBusiness)
+- Interaction/svc   → <Concept>Service      (AuthService)
+- Interaction/view  → <Concept>View         (LoginView)
+- Generalization    → its layer's logical suffix (Repository/Business/Service/View)
+- Utility           → <Concept>Utils        (StringUtils)
+- Transfer          → <Concept>             (User, Session)
+- Exception         → <Concept>Exception    (Transfer subtype; NetworkException)
+- Injection         → R / B / A
+
+## Folders
+
+The four type-subfolder names (general/, logic/, transfers/, utils/) are an
+immutable normative contract — use these exact names. The src/ matrix is an
+artifact root: it may hang from any path and multiple roots can coexist
+(verification runs per root). The entry point (main) lives OUTSIDE the root.
+
+- api/logic/service/   → Interaction Services
+- api/logic/gui/       → Interaction Views
+- api/general/         → Interaction Generalizations
+- api/transfers/       → Interaction Transfers
+- api/utils/           → Interaction Utilities
+- api/A                → Interaction Injector
+- business/logic/      → Business Logicals
+- business/general/    → Business Generalizations
+- business/transfers/  → Business Transfers
+- business/utils/      → Business Utilities
+- business/B           → Business Injector
+- repository/logic/    → Access Logicals
+- repository/general/  → Access Generalizations
+- repository/transfers/ → Access Transfers
+- repository/utils/    → Access Utilities
+- repository/R         → Access Injector
+
+## Before generating any file
+
+1. State the layer and type: "Layer: Business | Type: Logical"
+2. Derive name from classification: UserBusiness → business/logic/UserBusiness.ts
+3. Verify no layer boundary is crossed in the new file.
+4. Update the injector if adding a new Logical.

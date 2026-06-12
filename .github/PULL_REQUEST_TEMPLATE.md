@@ -15,4 +15,4 @@
 
 - [ ] Markdown lints cleanly.
 - [ ] If touching the Claude plugin manifest (`plugin.json` / `claude-plugin.json`), it remains valid JSON and `gh workflow run lint` passes.
-- [ ] Any rule citation references `XFA-RULES.md` from `xfarch/docs` accurately (rule id + section).
+- [ ] Any rule citation references `xfa-es.tex` § 11.3 (in `xfcfam/docs`) accurately (rule id + section).

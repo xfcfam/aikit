@@ -1,4 +1,4 @@
-# CODEOWNERS — automatic PR reviewers for xfarch/aikit.
+# CODEOWNERS — automatic PR reviewers for xfcfam/aikit.
 #
 # Format: <path-glob>  <owner>...
 # Owners are auto-requested for review on every PR touching the path.
