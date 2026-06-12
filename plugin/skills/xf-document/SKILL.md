@@ -9,7 +9,7 @@ description: >
   architecture docs, or a component inventory derived from an XF / CFAM
   codebase.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Documentation Generator
@@ -115,7 +115,7 @@ never `new`-ed elsewhere.
 
 Dependencies run strictly **descending**: Interaction → Business → Access —
 never upward, never lateral. Document this as a directed view and name the
-**Transfers that flow** across each boundary (the dumb data carried between
+**Transfers that flow** across each boundary (the data carried between
 layers).
 
 ```

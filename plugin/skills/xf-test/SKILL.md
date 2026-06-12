@@ -8,7 +8,7 @@ description: >
   Also trigger when the user wants help unit-testing XF / CFAM code while
   respecting layer isolation.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Test Designer
@@ -103,12 +103,16 @@ invariants — these are the architecture's load-bearing rules:
   (and, if an `XF` element exists, that `XF.init()` is exactly
   `R.init(); B.init(); A.init()`).
 
-### 5. Treat Transfers as pure data and Utilities as pure functions
+### 5. Treat Transfers as data and Utilities as pure functions
 
-- **Transfers** are dumb data — there is **no behaviour to mock**. Construct
-  one as a literal and use it as a fixture; do not write tests "for" a
-  Transfer (any logic that looked testable on it belongs in a `*Utils`).
-  Exception transfers (`*Exception`) are asserted on like any thrown value.
+- **Transfers** have **no collaborators to mock**. A pure-data Transfer is a
+  **fixture** — construct it as a literal and pass it in. A Transfer that
+  declares **self-contained operations** on its own data
+  (`Temperature.toFahrenheit()`) is tested like a pure function — construct,
+  call, assert, no mocks (§7.3.5). If an "operation" turns out to touch another
+  component or model a domain process, that is a violation to fix (it belongs in
+  a Logical), not to test around. Exception transfers (`*Exception`) are
+  asserted on like any thrown value.
 - **Utilities** are pure, static, stateless functions — **straightforward
   unit tests**: feed inputs, assert outputs, no mocks, no setup.
 
@@ -134,7 +138,7 @@ assert StringUtils.slugify("Hello World") == "hello-world"
 | Business · Logical | isolation unit | `R` | unit |
 | Interaction · Logical | isolation unit | `B` | unit |
 | any · Utility | pure-function unit | none | unit |
-| any · Transfer | fixture only | — | — |
+| any · Transfer | fixture (+ pure-function unit if it has self-contained ops) | none | unit |
 | Injection / `XF` | lifecycle-order unit | the slots | unit |
 
 ## TypeScript note

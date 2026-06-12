@@ -18,6 +18,28 @@ categories (3 layers × 5 types).
 The model applies equally to any programming language, framework, or paradigm.
 It does not impose a technology stack — it imposes a structural discipline.
 
+### Why it exists (foundations)
+
+- **Software automates formal processes.** A system does not *create* processes,
+  it *formalizes* them, so an artefact's structure is **isomorphic** to the
+  process it models (spec §5.1). Architecture is a *derived property* of the
+  process — analysis precedes design.
+- **The three layers are derived, not invented.** Every formal process
+  decomposes into processing (necessary) plus interaction and access (the two
+  exhaustive, mutually exclusive directions of communication with the
+  environment). Four independent traditions converge on it — BPMN, CSP/π-calculus,
+  the Actor Model, IPO (§5.2) — and the three layers correspond biunivocally to
+  these three stages (§5.5).
+- **XF is a META-MODEL, not an architecture.** It is a *reference model*
+  (ISO/IEC/IEEE 42010) — an abstraction layer *over* Clean, Hexagonal, Onion,
+  DDD, MVC, layered. Those are **instances** that project into the XF vocabulary;
+  XF is never a rival to them. Its contribution is **vocabulary**: the structure
+  is already present in every artefact, and XF makes it recognizable across
+  technologies (the fragmentation it removes is terminological, not structural).
+
+The full reasoning and the subtle particularities live in
+[`plugin/skills/_shared/foundations.md`](plugin/skills/_shared/foundations.md).
+
 ---
 
 ## 2. The Two Dimensions
@@ -214,9 +236,28 @@ and is not a classifiable component.
 | Interaction calling Access directly                     | Violates layer isolation |
 | Business knowing about HTTP, SQL, or UI frameworks      | Violates technology-agnosticism |
 | Multiple Injection components in the same layer         | Exactly one per layer |
-| Logic inside Transfer objects                           | Transfers are pure data |
+| A Transfer referencing a component or modelling a process | Transfer ops must be self-contained (§7.3.5) |
 | Utility components with state or side-effects           | Must be pure functions |
 | Upward dependencies (Access → Business, etc.)           | Violates dependency rule |
+
+**Particularities that are NOT violations** (common false positives):
+
+- **Information flowing upward is fine.** Isolation constrains *dependencies*,
+  not runtime data flow (§6.2.2). A lower layer may notify an upper layer of a
+  state change via **events / the observer pattern** — it mutates and notifies
+  without knowing its observers. Coupling stays descending; data ascends.
+- **Access utilities over primitive types are cross-layer.** `StringUtils`,
+  `DateUtils`, `NumberUtils`, `ArrayUtils` live in `repository/utils/` and may
+  be referenced from **any** layer (§7.3.4). Only primitive-type utilities get
+  this carve-out; domain utilities stay layer-local.
+- **Transfers may carry self-contained operations.** A Transfer *is* the data
+  and may declare operations that touch only its own data and model no business
+  process (§7.3.5). `Temperature.toFahrenheit()` is conformant; rich framework
+  types (collections, dates, promises) classify as Transfers.
+- **Cross-layer patterns are duplicated on purpose.** If two layers need the
+  same generalization, each implements its own (`StatefulRepository` +
+  `StatefulBusiness` + `StatefulView`); a shared cross-layer base is the
+  violation (§6.2.2).
 
 ---
 

@@ -3,18 +3,30 @@
 
 ## Architecture
 
+XF is a META-MODEL (reference model, ISO 42010) over Clean/Hexagonal/Onion/DDD/
+MVC — not a rival to them. Its 3 layers derive from the invariant tripartition of
+any formal process. The "why" + subtle points: plugin/skills/_shared/foundations.md
+
 This project follows the XF Architecture Model (CFAM):
 - 3 layers: Access (repository/) → Business (business/) → Interaction (api/)
 - 5 types per layer: Logical · Generalization · Injection · Utility · Transfer
 - 3 injectors: R (Access) · B (Business) · A (Interaction)
-- Dependencies flow DOWNWARD ONLY. No upward or lateral layer calls.
+- DEPENDENCIES flow DOWNWARD ONLY (no upward/lateral layer calls). Runtime DATA
+  may still flow upward via events/observer — isolation constrains dependencies,
+  not data flow.
 
 ## Mandatory rules
 
 - NEVER call Access (R.*) from Interaction directly — go through Business (B.*).
 - NEVER instantiate Logical components with `new`. Use R.x, B.x, A.x.
-- NEVER put logic in Transfer objects. Transfers are data-only.
+- Transfers MAY carry self-contained operations on their OWN data
+  (Temperature.toFahrenheit()); NEVER let a Transfer touch another component or
+  model a business process. "Data-only / no methods" is a DTO oversimplification.
 - NEVER put state or I/O in Utility components. Utilities are pure functions.
+  Exception: Access utils over PRIMITIVE types (StringUtils, DateUtils,
+  NumberUtils, ArrayUtils) live in repository/utils/ and may be used from any layer.
+- When two layers need the same generalization, write ONE PER LAYER
+  (StatefulRepository + StatefulBusiness + StatefulView) — never a shared base.
 - ALWAYS register new Logical components in their layer's injector (R, B, or A).
 - Init order at startup: R.init() → B.init() → A.init() (via XF.init()). Injections are static, non-instantiable.
 

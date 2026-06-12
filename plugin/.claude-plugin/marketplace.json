@@ -7,7 +7,7 @@
       "name": "xf-architecture",
       "description": "Classify, specify, implement, scaffold, review, test, document, and explain code following the XF Architecture Model (CFAM). Supports TypeScript, Python, Swift, and Kotlin.",
       "source": "https://github.com/xfcfam/aikit",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "keywords": ["architecture", "xf", "cfam", "code-generation", "compliance"]
     }
   ]

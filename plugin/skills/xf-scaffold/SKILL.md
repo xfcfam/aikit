@@ -8,7 +8,7 @@ description: >
   trigger when the user wants to add a single new XF component (e.g., "add a
   UserBusiness to my project").
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Scaffold

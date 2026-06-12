@@ -7,6 +7,61 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.3.0] — 2026-06-13
+
+Foundations & particularities refresh — re-derived from the normative document
+(`xfa-es.tex` §5–§9, edition XF-CFAM-001:2026). The rule catalogue, conformance
+model, folders and naming were already current as of 0.2.0; this release deepens
+the **philosophy** the rules are derived from and corrects conceptual drift in
+the prose so skills reason from the model's intent, not surface heuristics.
+
+### Added
+
+- **`_shared/foundations.md`** — a new shared reference capturing the *why* and
+  the subtle points: software as automation of formal processes (the isomorphism
+  principle), the invariant tripartition and its convergent derivation
+  (BPMN · CSP/π-calculus · Actor Model · IPO), the **meta-model / reference-model
+  framing** (XF is *over* Clean/Hexagonal/Onion/DDD/MVC, never a rival), the OSI
+  orthogonal-extension analogy, the four guiding principles, effective vs
+  contextual logic, and the particularities below. Registered in `_shared/spec.md`
+  and linked from every skill's `References` footer.
+- **Particularities now stated explicitly** across the skills and instruction
+  files: dependency direction ≠ data-flow direction (**upward information via
+  events/observer** is not a violation); the **cross-layer duplication mandate**
+  (one generalization per layer — `StatefulRepository` + `StatefulBusiness` +
+  `StatefulView`); the **Access primitive-utils exception** (`StringUtils` &c.
+  in `repository/utils/` are cross-layer); the **logical vs generalization
+  parametricity test**.
+
+### Changed
+
+- **Corrected the Transfer doctrine** — a Transfer **may carry self-contained
+  operations** on its own data (`Temperature.toFahrenheit()`); "data-only / no
+  methods" was a DTO oversimplification the model explicitly rejects (§7.3.5).
+  Fixed the wrong "logic inside a Transfer" example in `CLAUDE.md`, rule #4 in
+  `AGENTS.md`, the `.cursorrules` rule, and the Transfer guidance in
+  `xf-implement` and `xf-test`. Rich framework types (collections, dates,
+  promises, UI controls) **project** to Transfers.
+- **`xf-explain`** — added a "explain the *why*" section (formal processes, the
+  three-stage derivation, the meta-model framing, OSI) and four new
+  frequently-misunderstood points (upward events, duplication mandate,
+  primitive-utils exception, parametricity test).
+- **`xf-classify` decision tree** — added the parametricity test and the
+  effective/contextual-logic split to the Generalization step; corrected the
+  cross-layer-utility guidance to the primitive-types exception.
+- **`xf-review`** — added doctrinal notes so a review does not flag upward
+  events, cross-layer primitive-utils, or self-contained transfer operations as
+  violations.
+- **`INSTRUCTIONS.md`, `CLAUDE.md`, `AGENTS.md`, `.cursorrules`** — added the
+  foundations/meta-model framing and a "particularities that are NOT violations"
+  block to each.
+- **Re-synced `_shared/catalogue.md`** from `@xfcfam/tools` (restored byte-parity;
+  picked up the new `## Commands` section). Rule catalogue unchanged: 71 rules /
+  9 groups (61 structural + 10 semantic), Λ=0..4.
+- Bumped plugin, marketplace, and all eight skill versions to **0.3.0**.
+
+---
+
 ## [0.2.0] — 2026-06-12
 
 ### Changed

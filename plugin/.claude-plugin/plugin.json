@@ -1,6 +1,6 @@
 {
   "name": "xf-architecture",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Skills for generating and verifying code that follows the XF Architecture Model (Cross-Framework Architecture Model, CFAM). Classify, specify, implement, scaffold, review, test, document, and explain the L×T matrix system.",
   "author": {
     "name": "XFArch Contributors",

@@ -7,7 +7,7 @@ description: >
   "review my architecture". Also use when the user pastes code and asks if the
   structure is correct according to XF or CFAM.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Compliance Review

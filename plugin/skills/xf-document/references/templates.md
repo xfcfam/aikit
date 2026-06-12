@@ -57,8 +57,9 @@ export class B {
 
 ```typescript
 /**
- * XF: (Business, Transfer) — dumb data crossing the Business↔Access boundary.
- * No behaviour; pure operations on it live in a `*Utils` utility.
+ * XF: (Business, Transfer) — data crossing the Business↔Access boundary.
+ * May carry self-contained operations on its own data; anything that
+ * orchestrates a component or models a process lives in a Logical.
  */
 export interface Session {
   id: string

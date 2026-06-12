@@ -9,13 +9,16 @@
 
 ## Core reference
 
-The complete XF model is in `INSTRUCTIONS.md`. Key facts at a glance:
+The complete XF model is in `INSTRUCTIONS.md`; the *why* and the subtle points
+are in [`plugin/skills/_shared/foundations.md`](plugin/skills/_shared/foundations.md).
+Key facts at a glance:
 
 - **3 layers:** Access (`repository/`) → Business (`business/`) → Interaction (`api/`)
 - **5 types per layer:** Logical · Generalization · Injection · Utility · Transfer
 - **3 injection components:** `R` (Access) · `B` (Business) · `A` (Interaction)
 - **Access pattern:** `B.userBusiness.getUser(id)` — never `new UserBusiness()`
 - **Init order:** `R.init()` → `B.init()` → `A.init()` (no args; centralised by `XF.init()`). Injections are static and non-instantiable.
+- **XF is a META-MODEL, not an architecture.** It is a reference model (ISO 42010) *over* Clean / Hexagonal / Onion / DDD / MVC — those are instances that project into the XF vocabulary. Never frame it as "XF vs Clean"; the three layers derive from the invariant tripartition of any formal process (§5).
 
 ---
 
@@ -125,19 +128,30 @@ class UserService {
 }
 ```
 
-**3. Logic inside a Transfer object**
+**3. A Transfer that reaches into other components or models a process**
 ```typescript
-// ❌ Wrong — Transfer has business logic
+// ❌ Wrong — Transfer orchestrates another component / models a business process
 class User {
-    isAdmin(): boolean { return this.role === 'admin' }
+    async save() { await R.userRepository.persist(this) }   // touches R → transfer-dependency
+    grantAdmin() { /* a domain decision, not a self-contained derivation */ }
 }
 
-// ✓ Correct — Transfer is pure data; logic goes in Business
-class User { id: string; name: string; role: string }
+// ✓ Correct — Transfers MAY carry self-contained operations on their OWN data;
+//   orchestration and domain processes live in a Business Logical
+class User {
+    id: string; name: string; role: string
+    label(): string { return `${this.name} <${this.id}>` }  // self-contained derivation → OK
+}
 class UserBusiness {
-    isAdmin(user: User): boolean { return user.role === 'admin' }
+    async save(user: User): Promise<void> { return R.userRepository.persist(user) }
+    isAdmin(user: User): boolean { return user.role === 'admin' }  // a domain rule
 }
 ```
+> "Transfer = no methods" is a DTO oversimplification the model **rejects**. A
+> Transfer *is* the data and may declare operations that read / derive /
+> transform its own data (`Temperature.toFahrenheit()`); it must not access
+> another component or model a business process (§7.3.5). Rich framework types
+> (collections, dates, promises, UI controls) project to Transfers.
 
 **4. Instantiating Logicals directly**
 ```typescript
@@ -161,6 +175,22 @@ class DateUtils {
     static format(d: Date, pattern: string): string { ... }
 }
 ```
+
+### Particularities that are NOT mistakes
+
+Do not "fix" these — they are conformant by the model:
+
+- **Information flowing upward** via events / the observer pattern. Isolation
+  constrains *dependencies*, not data flow: a Business component may notify
+  Interaction of a state change as long as it never imports or calls it (§6.2.2).
+- **Access utilities over primitive types referenced from any layer.**
+  `StringUtils` / `DateUtils` / `NumberUtils` / `ArrayUtils` live in
+  `repository/utils/` and are exempt from the layer-local rule (§7.3.4).
+- **The same generalization duplicated per layer.** `StatefulRepository` +
+  `StatefulBusiness` + `StatefulView` is mandated, not redundant — a shared
+  cross-layer base would be the violation (§6.2.2).
+- **Native `throw new Error(...)`.** Native runtime errors are valid exception
+  vehicles; a custom `*Exception` is opt-in for a domain concept, not required.
 
 ---
 

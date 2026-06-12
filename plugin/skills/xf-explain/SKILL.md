@@ -8,7 +8,7 @@ description: >
   "how do I use R, B, A?", or any question about understanding the XF
   Architecture Model concepts, principles, or decisions.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Explainer
@@ -89,8 +89,10 @@ more useful than a generic example.
 If the user's question implies a common misconception, address it directly:
 - "Service in XF means Interaction Logical, not Business Logical — unlike
   the naming in some frameworks."
-- "Transfer objects in XF have no methods; this is stricter than DTO patterns
-  that allow computed getters."
+- "Transfer objects in XF may carry **self-contained** operations on their own
+  data (a computed getter like `toFahrenheit()` is fine), but never operations
+  that touch another component or model a business process — unlike rich-domain
+  patterns where an entity persists or orchestrates itself."
 
 ### Explain design rationale when useful
 
@@ -139,8 +141,10 @@ Common confusions:
 - **Repository vs Service**: Repository is Access/Logical (I/O); Service is
   Interaction/Logical (entry point). They are in different layers with different
   responsibilities.
-- **Transfer vs model/entity**: Transfer is a data container with no logic,
-  no persistence annotations. It is the data that moves between components.
+- **Transfer vs model/entity**: a Transfer *is* the data that moves between
+  components — no persistence annotations, no dependency on other components,
+  and it models no business process. It **may** carry self-contained operations
+  on its own data (derive/transform/validate); it just never orchestrates.
 - **Structural vs semantic rules**: every rule carries
   `verifiability ∈ {structural, semantic}` (`§ 11.1.4`). A **structural**
   violation is decided by static analysis and caps conformance at `Λ=2`.

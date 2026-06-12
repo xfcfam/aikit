@@ -74,7 +74,7 @@ Dependencies flow **downward only**. Interaction → Business → Access. Never 
 | Generalization | Shared abstract base for multiple Logicals in the same layer |
 | Injection | Single entry point to all Logicals in the layer (`R` / `B` / `A`) |
 | Utility | Pure stateless helpers, local to the layer |
-| Transfer | Data-only structures that move between components (exceptions are a Transfer subtype) |
+| Transfer | The data that moves between components; may carry self-contained operations on its own data (exceptions are a Transfer subtype) |
 
 **3 injection components** — the only way to access Logical components:
 

@@ -13,6 +13,13 @@ layer-typed classification system for software components.
 
 Every component belongs to exactly **one layer** and exactly **one type**.
 
+XF is a **meta-model / reference model** (ISO/IEC/IEEE 42010), not an
+architecture that competes with Clean / Hexagonal / Onion / DDD / MVC — those
+are instances that project into the XF vocabulary. Its three layers derive from
+the invariant tripartition of any formal process (processing + interaction +
+access). The *why* and the subtle particularities are in
+[`plugin/skills/_shared/foundations.md`](plugin/skills/_shared/foundations.md).
+
 ---
 
 ## The 3 layers (mandatory knowledge)
@@ -38,7 +45,7 @@ Never upward, never skipping a layer.
 | `Generalization`| Shared base for multiple Logical components (same layer)  |
 | `Injection`     | Single entry point to all Logicals in the layer (`R`/`B`/`A`) |
 | `Utility`       | Pure stateless helper functions, local to the layer       |
-| `Transfer`      | Data-only structs that move between components            |
+| `Transfer`      | The data that moves; self-contained ops OK, no component deps |
 
 ---
 
@@ -137,8 +144,13 @@ recommended, not required.
 3. **No framework code in Business.** Business components must compile (logically)
    without any HTTP, ORM, or UI framework import.
 
-4. **Transfer objects = data only.** No methods, no validation, no computed
-   properties. Plain fields only.
+4. **Transfers = data, with self-contained operations allowed.** A Transfer
+   *is* the data and may declare operations that read / derive / transform its
+   **own** data (`Temperature.toFahrenheit()`, a structural validation). It must
+   **not** access another component (no `R`/`B`/`A`, no other logical) or model
+   a business process — that goes in a Logical (§7.3.5). "Plain fields only" is
+   a DTO oversimplification the model rejects; rich framework types
+   (collections, dates, promises) project to Transfers.
 
 5. **Utilities = pure functions.** No constructor state, no I/O, no randomness
    unless explicitly scoped (e.g. `CryptoUtils.randomToken()` is acceptable as
@@ -149,6 +161,18 @@ recommended, not required.
 
 7. **Do not break existing injectors.** When adding a new Logical component,
    register it in the appropriate Injection file (`R`, `B`, or `A`).
+
+### Particularities — do not flag these as violations
+
+- **Upward data flow is fine** via events / observer — isolation constrains
+  *dependencies*, not runtime data flow (§6.2.2). A lower layer may notify an
+  upper one as long as it never imports or calls it.
+- **Access utils over primitive types are cross-layer**: `StringUtils`,
+  `DateUtils`, `NumberUtils`, `ArrayUtils` in `repository/utils/` may be used
+  from any layer (§7.3.4). Domain utilities stay layer-local.
+- **Cross-layer patterns are duplicated on purpose**: one Generalization per
+  layer (`StatefulRepository` + `StatefulBusiness` + `StatefulView`); a shared
+  base is the violation (§6.2.2).
 
 ---
 

@@ -38,10 +38,20 @@ levels, consult `../../_shared/catalogue.md`.
 
 ## Step 2 — Detect Transfer or Exception
 
-> Does this component contain **only data fields** (properties,
-> attributes)? No methods, no computed values, no I/O, no dependencies?
-> (Constructors that only assign fields, and `getters` that return a
-> stored field without computation, are considered "data only".)
+> Is this component an **instantiable structure that *is* the data** — its
+> attributes describe a domain/access/interaction concept — whose operations
+> (if any) are **self-contained**: they touch only its own data
+> (query/derive/transform/validate), reference **no other component**, and
+> model **no business process**?
+
+A Transfer **may have methods** — that is the common misconception to avoid.
+`Temperature.toFahrenheit()` (derives from its own `celsius`) keeps it a
+Transfer; `Order.submit()` calling `R.orderRepository` does **not** (that
+orchestrates a component → it is a Logical, §7.3.5). Rich framework/stdlib
+types (collections, dates, promises, UI controls, result wrappers) **project**
+to Transfers. The discriminators: vs **Logical** = models no business process
+and orchestrates nothing; vs **Utility** = it is an *instantiable* structure
+carrying its own data (a Utility is static pure functions with no instance/data).
 
 - **YES** → continue with the Exception sub-check:
 
@@ -115,8 +125,8 @@ This is the *effective vs contextual logic* split (§7.3.1): effective logic
   - Generalizations carry their layer's logical suffix and may hold *operative*
     attributes (observer list, HTTP client) but **never domain state**.
   - **Cross-layer duplication is mandated**: if two layers need the same
-    pattern, each implements its own (`StatefulRepository` ＋ `StatefulBusiness`
-    ＋ `StatefulView`) — never one shared base (§6.2.2).
+    pattern, each implements its own (`StatefulRepository` + `StatefulBusiness`
+    + `StatefulView`) — never one shared base (§6.2.2).
 - **NO** → continue to Step 5
 
 ---
@@ -203,7 +213,7 @@ Common mixed-concern patterns:
 Named XF?                → XF start-point element (lifecycle orchestrator)
 Named R / B / A?         → Injection (Access / Business / Interaction)
 Data + name *Exception?  → Exception (sub-Transfer, /<layer>/transfers/)
-Data only?               → Transfer  (layer that produces it)
+Data structure (ops on own data)? → Transfer  (layer that produces it)
 Pure functions?          → Utility   (layer that uses it)
 Abstract base?           → Generalization (same layer as the Logicals)
 Has I/O (DB/API/FS)?     → Access / Logical → suffix Repository

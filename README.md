@@ -7,18 +7,21 @@ questions about the XF spec.
 
 ## Status
 
-This repository is in early scaffolding. The initial commit contains only
-governance and tooling files (license, code of conduct, security policy,
-CI, contribution guidelines). The plugin manifest and skills will land in
-follow-up commits.
+Working plugin, version **0.3.0**, tracking spec edition **XF-CFAM-001:2026**.
+See [`plugin/CHANGELOG.md`](./plugin/CHANGELOG.md) for the release history and
+[`plugin/README.md`](./plugin/README.md) for install instructions.
 
 ## What's in scope
 
-- A Claude plugin (`plugin.json`) declaring skills, prompts and MCP wiring.
-- A library of **skills** that teach Claude how to apply XF rules in
-  conversation: `xf-classify`, `xf-explain`, `xf-review`, `xf-scaffold`.
-- Reusable **instructions** (`AGENTS.md`, `CLAUDE.md`, `INSTRUCTIONS.md`)
-  consumable by any agent that wants XF-aware behaviour.
+- A Claude plugin (`plugin/.claude-plugin/plugin.json`) bundling eight skills.
+- A library of **skills** that teach Claude to apply XF rules in conversation:
+  `xf-classify`, `xf-specify`, `xf-implement`, `xf-scaffold`, `xf-review`,
+  `xf-test`, `xf-document`, and `xf-explain`.
+- **Shared references** under `plugin/skills/_shared/`: the model `foundations`
+  (philosophy & particularities), the `spec` clause map, the synced rule
+  `catalogue` / `rules-detail`, and the `@xfcfam/*` `libraries` index.
+- Reusable **instructions** (`AGENTS.md`, `CLAUDE.md`, `INSTRUCTIONS.md`,
+  `.cursorrules`) consumable by any agent that wants XF-aware behaviour.
 
 ## Rule catalogue — single source of truth
 

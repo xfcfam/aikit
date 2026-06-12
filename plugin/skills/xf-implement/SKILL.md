@@ -8,7 +8,7 @@ description: >
   XF-compliant implementation. Use after a plan exists (or build the plan
   inline) — this skill produces real source files.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Implement
@@ -116,19 +116,19 @@ Write each file. Hard rules to keep while generating:
    Logical-to-Logical reference.
 3. **Pure Utilities** — `*Utils` are non-instantiable, static-only, stateless,
    no I/O, no side effects, import no injection. Same input → same output.
-4. **Dumb Transfers** — carry data only. No business operations, no
-   dependencies on injections/logicals/utilities. Self-contained operations on
-   their own data are fine; modelling a domain process is not. Errors that are
-   a domain concept become `*Exception` (a Transfer subtype); generic runtime
-   errors need no wrapping.
+4. **Transfers** — carry data, plus **self-contained** operations on their own
+   data if useful (`Temperature.toFahrenheit()`). No dependencies on
+   injections/logicals/utilities, and they never model a domain process — that
+   is a Logical's job (§7.3.5). Errors that are a domain concept become
+   `*Exception` (a Transfer subtype); generic runtime errors need no wrapping.
 5. **Generalizations are horizontal** — abstract, same-layer only, no domain
    state, no injection calls; they carry the layer suffix. Ramify by
    cross-cutting policy (caching, retry, audit), never by functional split.
    A Generalization is *parametric over the domain* (applies to >1 concept
    unchanged); the moment it names a concrete concept it has become effective
    logic and belongs in a Logical. If two layers need the same pattern,
-   **generate one Generalization per layer** (`StatefulRepository` ＋
-   `StatefulBusiness` ＋ `StatefulView`) — the cross-layer duplication is
+   **generate one Generalization per layer** (`StatefulRepository` +
+   `StatefulBusiness` + `StatefulView`) — the cross-layer duplication is
    mandated (§6.2.2); never emit one shared base.
 6. **Lifecycle wired in R / B / A** — every Logical declares invocable
    `init()` / `terminate()`; non-trivial setup goes in `init()`, not the

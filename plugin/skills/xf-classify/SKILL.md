@@ -7,7 +7,7 @@ description: >
   "how do I migrate this to XF structure?". Also use when the user provides
   existing code and wants to know its XF classification before refactoring.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Component Classifier
@@ -73,7 +73,7 @@ Use `references/decision-tree.md` for the full decision tree. Quick heuristics:
 - Has network/DB/file I/O as its **primary purpose** → **Access / Logical**
 - Contains domain rules, business invariants, domain state → **Business / Logical**
 - Is an HTTP handler, event listener, GUI controller, CLI entry → **Interaction / Logical**
-- Pure data fields, no methods → **Transfer** (assign to the layer that creates it)
+- A structure that *is* the data (methods, if any, are self-contained — no deps, no domain process) → **Transfer** (assign to the layer that creates it)
 - Stateless helper functions only → **Utility** (assign to the layer that uses it)
 - Manages and exposes other Logicals in one layer → **Injection** (R, B, or A)
 - Shared base class for multiple Logicals in the same layer → **Generalization**

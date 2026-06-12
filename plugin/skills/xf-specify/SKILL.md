@@ -8,7 +8,7 @@ description: >
   user stories and wants the L×T component plan **before** any implementation.
   This is design-only — no code is written.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # XF Specify
@@ -42,7 +42,7 @@ before decomposing.
   **A** (Interaction). It instantiates and exposes that layer's Logicals and
   is the only conduit downward: `<injection>.<component>.<operation>()`, e.g.
   `B.session.refresh()`, `R.database.fetch()`, `A.temperatureService.update()`.
-- **Transfers** are dumb data objects that *flow* between components; they are
+- **Transfers** are the data objects that *flow* between components (they may carry self-contained operations on their own data); they are
   the payload of every operation.
 - **Nomenclature**: Access Logical → `*Repository`; Business Logical →
   `*Business`; Interaction Logical → `*Service` (systemic) / `*View`
