@@ -1,13 +1,16 @@
 {
-  "name": "XFArch Plugin Marketplace",
-  "description": "Official plugins for the XF Architecture Model (Cross-Framework Architecture Model, CFAM)",
-  "homepage": "https://xfcfam.org",
+  "name": "xfcfam",
+  "owner": {
+    "name": "XFArch Contributors"
+  },
+  "description": "Official marketplace for the XF Architecture Model (Cross-Framework Architecture Model, CFAM).",
   "plugins": [
     {
       "name": "xf-architecture",
+      "source": "./plugin",
       "description": "Classify, specify, implement, scaffold, review, test, document, and explain code following the XF Architecture Model (CFAM). Supports TypeScript, Python, Swift, and Kotlin.",
-      "source": "https://github.com/xfcfam/aikit",
-      "version": "0.3.0",
+      "homepage": "https://xfcfam.org",
+      "license": "MIT",
       "keywords": ["architecture", "xf", "cfam", "code-generation", "compliance"]
     }
   ]

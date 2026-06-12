@@ -9,30 +9,32 @@
 
 ## Install
 
+The `/plugin` commands run **inside Claude Code** (the CLI / interactive
+session), not in other chat surfaces.
+
 ### From the marketplace (recommended)
 
 ```
 /plugin marketplace add xfcfam/aikit
-/plugin install xf-architecture@xfcfam/aikit
+/plugin install xf-architecture@xfcfam
 ```
 
-### Direct from GitHub
+`xfcfam` is the **marketplace** name (defined in the repo-root
+`.claude-plugin/marketplace.json`); `xf-architecture` is the **plugin**. Pin a
+branch or tag with `@ref`, e.g. `/plugin marketplace add xfcfam/aikit@main`.
 
-```
-/plugin install github:xfcfam/aikit
-```
-
-### From a local clone
+### From a local clone (for development)
 
 ```
 git clone https://github.com/xfcfam/aikit
-/plugin install ./aikit
+/plugin marketplace add ./aikit
+/plugin install xf-architecture@xfcfam
 ```
 
-After installing, reload your plugins:
+After pushing changes upstream, refresh with:
 
 ```
-/reload-plugins
+/plugin marketplace update xfcfam
 ```
 
 ---
