@@ -7,6 +7,64 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.4.0] — 2026-06-13
+
+Validator integration, ambient XF awareness, operation-level planning, and a new
+requirements-analysis pipeline. Where 0.3.0 refreshed the *philosophy*, 0.4.0
+makes the toolkit actively **run** the conformance validator, **carry** the XF
+convention across sessions, and **plan down to operations** — plus a new
+end-to-end specification skill.
+
+### Added
+
+- **New skill `xf-analyze` — the requirements-to-design pipeline.** Formalizes a
+  whole client spec into an engineering plan: read specs → **SRS** (FR/NFR, IDed,
+  acceptance criteria) → **ADRs** (only for what XF leaves open) → **decompose
+  into XF artefacts** → per-artefact L×T matrix + data model → operations →
+  **bidirectional traceability matrix** (coverage / orphan / NFR-homing checks) →
+  dependency/call/data-flow **graphs** → **pre-code design-conformance
+  verification** → **test plan** → bottom-up task list. Aligned with
+  ISO/IEC/IEEE 29148 + ADRs; design-only; delegates to `xf-specify` / `xf-review`
+  / `xf-test` / `xf-implement`. Ships `references/templates.md` (SRS & ADR
+  templates, traceability matrix, Mermaid graphs, verification report, per-phase
+  definition-of-done, and an end-to-end worked example). Brings the plugin to
+  **nine skills**.
+
+### Changed
+
+- **`xf-review` — runs the validator first.** A new step 0 executes
+  `npx @xfcfam/tools validate <path>` (recommending `npm i -g @xfcfam/tools` for
+  repeated use) and uses its `Λ` verdict as the source of truth, falling back to
+  the manual catalogue walk when the tool can't run (no Node, offline,
+  non-artefact target, or a stub-parser language).
+- **`xf-implement` — verifies its output.** A new step 7 runs the
+  `@xfcfam/tools` validator after generating code **into an existing XF artefact
+  root**, reporting `Λ` and fixing structural violations before handing back;
+  skipped for brand-new scaffolds, single snippets, or when Node is unavailable.
+  The validator is auto-run only by these two skills — `xf-review` (on a validate
+  request) and `xf-implement` (on an implement-into-XF request); the others at
+  most mention it.
+- **`xf-scaffold` — ambient XF awareness.** A full-project scaffold now writes a
+  project `CLAUDE.md` at the repo root (template in
+  `xf-scaffold/references/structure.md`) that declares the repo an XF artefact and
+  routes generic implement/review/test/etc. requests to the XF skills — so future
+  sessions get XF treatment **without the user ever typing "XF"** (Claude Code
+  auto-loads `CLAUDE.md`). Never overwrites an existing one (appends a section or
+  uses `.claude/CLAUDE.md`). Also triggers on greenfield "start a new project"
+  requests and **asks** before scaffolding. XF stays **opt-in**: the toolkit never
+  proposes adopting or migrating an existing non-XF codebase to XF.
+- **`xf-specify` — now plans down to operations.** Beyond components / L×T type /
+  dependencies / transfers / wiring / layout, the plan now derives **each
+  Logical's operations** (signature + downward delegations, §7.3.1) and emits a
+  **bottom-up implementation task list**. Its description was broadened to trigger
+  on "break these requirements into tasks" / "what do I need to build for…".
+- **Manifests** — `plugin.json` and `marketplace.json` descriptions now advertise
+  the `analyze` capability.
+- Bumped plugin, marketplace, and all **nine** skill versions to **0.4.0** (the
+  new `xf-analyze` ships at 0.4.0).
+
+---
+
 ## [0.3.0] — 2026-06-13
 
 Foundations & particularities refresh — re-derived from the normative document

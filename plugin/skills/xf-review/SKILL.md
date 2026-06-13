@@ -7,7 +7,7 @@ description: >
   "review my architecture". Also use when the user pastes code and asks if the
   structure is correct according to XF or CFAM.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # XF Compliance Review
@@ -30,6 +30,55 @@ These two files are kept in sync with the normative spec (`xfa-en.tex
 as authoritative; do not invent rules outside what they enumerate.
 
 ## Review procedure
+
+> **Prefer the validator.** If you can run the `@xfcfam/tools` validator
+> (step 0), it gives the authoritative structural verdict in one shot — use its
+> `Λ` level and structural violations as the source of truth, then add the human
+> semantic pass (steps 2–5) that a static tool cannot perform. Fall back to the
+> fully manual walk (steps 1–5) when the tool can't run, or for languages whose
+> parser is a stub (only TypeScript is fully covered).
+
+### 0. Run the validator (`@xfcfam/tools`) — preferred
+
+The model ships a reference validator that computes `Λ` exactly. Try it first
+whenever the target is an **artefact root** (a directory containing `./src/`
+plus a language manifest at its root). Run it with the Bash/shell tool:
+
+```bash
+# one-off, no install (fetches the published package on demand):
+npx @xfcfam/tools validate <path>
+
+# structured output for parsing:
+npx @xfcfam/tools validate <path> --json
+```
+
+If the user will review repeatedly, **recommend installing it globally** — it is
+much faster than re-fetching with `npx` each time:
+
+```bash
+npm i -g @xfcfam/tools     # installs the `xftools` command
+xftools validate <path>    # then just run this
+```
+
+Use the tool's result directly:
+
+- It prints a conformance level `Λ ∈ {0..4}` and lists violations by scope
+  (structural / component / artefact) with rule id + `file:line`. Surface those
+  in your report. Exit code is `0` when `Λ ≥ 3`, `1` when `Λ < 3`, `2` on a
+  usage / runtime error.
+- It is **capped at `Λ=3`**: a static tool cannot decide the 10 semantic rules.
+  After a clean tool run, still perform the **semantic human pass** (steps 2 and
+  5 plus the "Important notes" below) to judge whether the artefact also reaches
+  `Λ=4`.
+
+**Fall back to the manual walk (steps 1–5) when:**
+
+- `node` / `npm` / `npx` is unavailable, or you are offline / the npm registry
+  is unreachable (say so to the user) — never fail the review, just do it by hand.
+- The target is a single snippet or one file, or otherwise not an artefact root.
+- The language's parser is a stub (the tool runs path-based rules for every
+  language but AST rules only for TypeScript) — its warnings name the skipped
+  rules; cover those by reading the code.
 
 ### 1. Gather the code
 

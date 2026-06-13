@@ -6,9 +6,12 @@ description: >
   with XF architecture", "create XF components", "add a new repository/business/
   service to my XF project", or "generate XF-compliant boilerplate". Also
   trigger when the user wants to add a single new XF component (e.g., "add a
-  UserBusiness to my project").
+  UserBusiness to my project"). Also trigger when the user starts a NEW project
+  or asks to set up a project structure WITHOUT naming XF (e.g. "start a new
+  backend", "set up a new service", "initialize a project") — in that case ASK
+  whether they want XF structure before scaffolding, rather than assuming it.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # XF Scaffold
@@ -31,6 +34,20 @@ Ask for missing information:
 
 If the user did not specify, produce a TypeScript scaffold by default and note
 the assumption.
+
+### Opt-in only — never pitch a migration
+
+XF is opt-in. **Never propose adopting or migrating to XF for an existing
+non-XF codebase.** If a repo already has a non-XF structure, do not suggest
+restructuring it, do not say "let's make this XF" — that is intrusive. Step
+aside (or defer to whatever skill actually fits what the user asked).
+
+The one place a neutral offer is appropriate is a **genuinely new / empty
+project**: if the user is starting one but did not name XF ("start a new
+backend", "set up a service"), you may ask **once** — *do they want XF (CFAM)
+structure?* — and proceed only if they say yes (the scaffold then includes the
+project `CLAUDE.md`, below). If they decline, or if non-XF code is already
+present, step aside without a pitch.
 
 ## Scaffolding rules
 
@@ -83,7 +100,15 @@ technology is an implementation detail of the Access layer).
 
 1. Show the complete folder tree
 2. Create each file using the Write tool, inserting appropriate boilerplate
-3. After all files are written, list them with a one-line description each
+3. **Write a project `CLAUDE.md`** at the repo root from the template in
+   `references/structure.md` (§ "Project `CLAUDE.md` — ambient XF awareness").
+   This is what makes future sessions treat the project as XF **without the user
+   naming it** — Claude Code auto-loads `CLAUDE.md`, so a generic request ("add
+   a login endpoint") then gets XF treatment and routes to the XF skills. Never
+   overwrite an existing `CLAUDE.md`: append the `## Architecture — XF / CFAM`
+   section, or write `.claude/CLAUDE.md` instead.
+4. After all files are written, list them with a one-line description each, and
+   note that the project is now ambiently XF-aware via `CLAUDE.md`
 
 ### For a single component
 

@@ -8,7 +8,7 @@
     {
       "name": "xf-architecture",
       "source": "./plugin",
-      "description": "Classify, specify, implement, scaffold, review, test, document, and explain code following the XF Architecture Model (CFAM). Supports TypeScript, Python, Swift, and Kotlin.",
+      "description": "Analyze a spec (SRS + ADRs to design), classify, specify, implement, scaffold, review, test, document, and explain code following the XF Architecture Model (CFAM). Supports TypeScript, Python, Swift, and Kotlin.",
       "homepage": "https://xfcfam.org",
       "license": "MIT",
       "keywords": ["architecture", "xf", "cfam", "code-generation", "compliance"]

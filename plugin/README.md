@@ -44,10 +44,11 @@ After pushing changes upstream, refresh with:
 | Skill | Trigger phrases | What it does |
 |---|---|---|
 | `xf-classify` | "classify this component", "what layer is this?", "help me migrate to XF" | Maps existing code to its L×T cell, canonical name, and target path. |
-| `xf-specify` | "turn these requirements into an XF design", "what components do I need for…" | Translates requirements / user stories into an L×T component plan — design only, before any code. |
+| `xf-analyze` | "formalize this spec", "produce the SRS and ADRs", "turn this client spec into an XF design", "break this whole spec into tasks" | Full requirements pipeline for a whole spec: SRS + ADRs → XF artefacts → L×T matrix + operations → traceability → graphs → design verification → test plan → task list. Design only. |
+| `xf-specify` | "specify this feature in XF", "what components do I need for…", "plan this user story" | Translates a **single** feature / user story into an L×T component plan **with operations** — design only. For a whole spec, use `xf-analyze`. |
 | `xf-implement` | "implement this feature in XF", "generate XF code for…", "build this following CFAM" | Generates XF-compliant components from a feature or requirement, wired through R/B/A. |
 | `xf-scaffold` | "scaffold an XF project", "generate XF structure", "add a UserBusiness" | Generates the canonical folder layout, R/B/A injection stubs, and component boilerplate. |
-| `xf-review` | "review for XF compliance", "check XF violations", "what conformity level is this?" | Audits code for layer / naming / folder / injection violations. Reports conformity level Λ=0..4. |
+| `xf-review` | "review for XF compliance", "check XF violations", "what conformity level is this?" | Runs the `@xfcfam/tools` validator (falls back to a manual catalogue walk) and audits layer / naming / folder / injection violations. Reports Λ=0..4. |
 | `xf-test` | "write tests for this XF component", "how do I test XF code", "mock the injection for testing" | Designs tests that respect layer isolation (mock through R/B/A), with coverage by L×T cell. |
 | `xf-document` | "document this XF artifact", "generate a component catalog / README" | Produces a component catalog by L×T cell, the injection map, the dependency view, and docs. |
 | `xf-explain` | "explain XF", "how does injection work?", "what does Λ=2 mean?" | Answers questions about XF concepts with concrete code examples. |

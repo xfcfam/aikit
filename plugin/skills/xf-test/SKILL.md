@@ -8,7 +8,7 @@ description: >
   Also trigger when the user wants help unit-testing XF / CFAM code while
   respecting layer isolation.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # XF Test Designer

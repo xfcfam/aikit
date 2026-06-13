@@ -371,3 +371,71 @@ idioms:
 xftools today has a real parser only for **TypeScript**. The other
 languages have stub parsers and the structural-only rules apply.
 See `_shared/catalogue.md` § "Languages".
+
+---
+
+## Project `CLAUDE.md` — ambient XF awareness
+
+Every **full-project scaffold** also writes a `CLAUDE.md` at the artefact's repo
+root. This is what makes future sessions treat the project as XF **without the
+user ever typing "XF"**: Claude Code auto-loads `CLAUDE.md` at the start of every
+session, so a generic request ("add a login endpoint") gets XF treatment because
+the ambient context says the repo is XF and routes the work to the XF skills.
+
+Write the template below verbatim, substituting `<project>`. **Never overwrite an
+existing `CLAUDE.md`** — if one is present, append only the
+`## Architecture — XF / CFAM` section to it, or (to leave the user's root file
+untouched) write to `.claude/CLAUDE.md`, which Claude Code also auto-loads.
+
+````markdown
+# <project>
+
+## Architecture — XF / CFAM (read this first)
+
+This repository is an **XF artefact** (Cross-Framework Architecture Model, CFAM,
+edition XF-CFAM-001:2026). Apply the XF model to **every** code request in this
+repo — implement, review, test, refactor, document — **even when the request
+does not mention "XF"**, unless the user explicitly opts out.
+
+When the `xf-architecture` plugin is installed, route the work to its skills:
+
+| Request | Skill |
+| --- | --- |
+| add / implement / build a feature or component | `xf-implement` |
+| design / plan a feature before coding | `xf-specify` |
+| classify existing code, or "what layer/type is this?" | `xf-classify` |
+| review / audit / "is this right?" / conformance level | `xf-review` |
+| write or design tests | `xf-test` |
+| document the architecture / component catalog | `xf-document` |
+| explain a concept or why a rule exists | `xf-explain` |
+| add a folder or component skeleton | `xf-scaffold` |
+
+If the `xf-architecture` plugin is not installed, follow the conventions below
+and the full model at https://xfcfam.org.
+
+### Conventions (summary — the skills carry the full rules)
+
+- **3 layers, dependencies descending only:** Interaction (`src/api`) →
+  Business (`src/business`) → Access (`src/repository`). Information may flow
+  upward via events; dependencies never do.
+- **Reach logicals only through the injections** `R` / `B` / `A`
+  (`B.userBusiness.getUser(id)`); never `new` a logical elsewhere.
+- **Canonical names:** `*Repository` / `*Business` / `*Service` / `*View` /
+  `*Utils`; Transfers are the domain concept (no suffix); injections are
+  `R` / `B` / `A`; the optional start-point element is `XF`.
+- **Canonical folders:** `<layer>/{general,logic,transfers,utils}` + the
+  injection file.
+
+### Conformance
+
+This artefact targets conformance level **Λ ≥ 3**. Validate with:
+
+```bash
+npx @xfcfam/tools validate ./        # one-off; or `xftools validate ./` after `npm i -g @xfcfam/tools`
+```
+
+Full model and ecosystem: https://xfcfam.org
+````
+
+Keep this file short — it is a pointer that sets the ambient convention, not a
+copy of the spec. The skills and `INSTRUCTIONS.md` hold the detail.

@@ -9,7 +9,7 @@ description: >
   architecture docs, or a component inventory derived from an XF / CFAM
   codebase.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # XF Documentation Generator

@@ -8,7 +8,7 @@ description: >
   XF-compliant implementation. Use after a plan exists (or build the plan
   inline) — this skill produces real source files.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # XF Implement
@@ -272,7 +272,34 @@ State the conformance level you are targeting: a clean structural
 implementation reaches **Λ=3** (structurally conformant — the static ceiling);
 **Λ=4** additionally requires human review of the semantic rules (does a
 Repository contain only access logic? does a Transfer avoid modelling the
-domain?). Offer to run `xftools validate <path>` to confirm.
+domain?). When you implemented into an existing XF artefact, confirm it with the
+validator (step 7).
+
+### 7. Verify with the validator (when the target is an XF artefact)
+
+If you generated code **into an existing XF artefact root** (a `./src/` with the
+canonical layers + a language manifest), don't stop at the self-check — run the
+reference validator to confirm the new components didn't break conformance. Run
+it with the Bash/shell tool:
+
+```bash
+npx @xfcfam/tools validate <artefact-root>        # one-off, no install
+```
+
+If the user will iterate, recommend installing it once (faster than re-fetching
+with `npx` every time):
+
+```bash
+npm i -g @xfcfam/tools     # adds the `xftools` command
+xftools validate <artefact-root>
+```
+
+Report the `Λ` it returns and fix any structural violation it flags before
+handing the code back; the tool tops out at `Λ=3`, so the semantic checks in
+step 6 remain your responsibility. **Skip the validator** when there is no
+artefact root to point it at — a brand-new scaffold with nothing wired yet, a
+single snippet, or a design with no `/src` — or when Node / npm is unavailable;
+there, the step-6 self-check is the verification.
 
 ## Final note
 
