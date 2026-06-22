@@ -39,12 +39,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout aikit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: aikit
 
       - name: Checkout xfcfam/tools
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: xfcfam/tools
           ref: ${{ github.event.inputs.tools_ref || 'main' }}
