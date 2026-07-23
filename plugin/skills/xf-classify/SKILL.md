@@ -7,7 +7,7 @@ description: >
   "how do I migrate this to XF structure?". Also use when the user provides
   existing code and wants to know its XF classification before refactoring.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # XF Component Classifier

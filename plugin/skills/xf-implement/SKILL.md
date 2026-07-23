@@ -8,7 +8,7 @@ description: >
   XF-compliant implementation. Use after a plan exists (or build the plan
   inline) — this skill produces real source files.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # XF Implement
@@ -27,7 +27,7 @@ If the user only wants a design / component plan (no code yet), use
 Read **`../_shared/catalogue.md`** (rule overview + conformance model) and, for
 templates, **`../xf-scaffold/references/structure.md`** before writing.
 
-> **Reuse before you build.** Before writing a Utility, a Generalization, or a layer adapter, check the `@xfcfam/*` reference libraries ([`../_shared/libraries.md`](../_shared/libraries.md)) — persistence, HTTP, SQL, filesystem, server transports, retry/cache/pagination, scheduling and state machines already exist. Extend them instead of reinventing.
+> **Reuse before you build.** Before hand-writing a Utility, a Generalization, or a layer adapter, check whether a published **XF reference library for the developer's stack** already covers the need (persistence, HTTP, SQL, filesystem, server transports, retry / cache / pagination / scheduling / state machines). Resolve it **live** against the project's ecosystem registry (npm / NuGet / PyPI / Maven) per [`../_shared/libraries.md`](../_shared/libraries.md) — or ask the **`xf-library`** skill for a recommendation — and extend it rather than reinventing; hand-write only when none exists.
 
 ## The model in one screen
 
@@ -104,6 +104,18 @@ The `/logic` subdivisions (`local`/`remote`, `instance`/`device`,
 by technology — `UserRepository`, not `PostgresUserRepository`.
 
 ### 4. Implement each component honouring the contract
+
+**Reuse triage first — library or ad-hoc?** Before writing any component whose
+capability a published library plausibly covers — Access logicals /
+generalizations (DB, HTTP, filesystem, external protocols), server transports,
+cross-cutting Generalizations (retry / cache / pagination / scheduling /
+observable state), and general-purpose Utilities — run the **`xf-library`** reuse
+check (resolve live in the project's ecosystem). If a library fits, extend its
+base instead of writing from scratch; if none fits, implement ad-hoc per the
+model. **Skip the check for what is inherently bespoke:** Business domain
+logicals, domain-specific operations, and Transfers — no library implements your
+domain. If the registry is unreachable, fall back to the capability-level
+guidance and proceed (a missing library never blocks).
 
 Write each file. Hard rules to keep while generating:
 

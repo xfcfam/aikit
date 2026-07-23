@@ -7,16 +7,16 @@ questions about the XF spec.
 
 ## Status
 
-Working plugin, version **0.3.0**, tracking spec edition **XF-CFAM-001:2026**.
+Working plugin, version **0.5.0**, tracking spec edition **XF-CFAM-001:2026**.
 See [`plugin/CHANGELOG.md`](./plugin/CHANGELOG.md) for the release history and
 [`plugin/README.md`](./plugin/README.md) for install instructions.
 
 ## What's in scope
 
-- A Claude plugin (`plugin/.claude-plugin/plugin.json`) bundling eight skills.
+- A Claude plugin (`plugin/.claude-plugin/plugin.json`) bundling ten skills.
 - A library of **skills** that teach Claude to apply XF rules in conversation:
-  `xf-classify`, `xf-specify`, `xf-implement`, `xf-scaffold`, `xf-review`,
-  `xf-test`, `xf-document`, and `xf-explain`.
+  `xf-classify`, `xf-analyze`, `xf-specify`, `xf-implement`, `xf-scaffold`,
+  `xf-library`, `xf-review`, `xf-test`, `xf-document`, and `xf-explain`.
 - **Shared references** under `plugin/skills/_shared/`: the model `foundations`
   (philosophy & particularities), the `spec` clause map, the synced rule
   `catalogue` / `rules-detail`, and the `@xfcfam/*` `libraries` index.
