@@ -11,14 +11,14 @@ description: >
   backend", "set up a new service", "initialize a project") — in that case ASK
   whether they want XF structure before scaffolding, rather than assuming it.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # XF Scaffold
 
 Generate XF-compliant project structure and component boilerplate.
 
-> **Reuse before you build.** Before writing a Utility, a Generalization, or a layer adapter, check the `@xfcfam/*` reference libraries ([`../_shared/libraries.md`](../_shared/libraries.md)) — persistence, HTTP, SQL, filesystem, server transports, retry/cache/pagination, scheduling and state machines already exist. Extend them instead of reinventing.
+> **Reuse before you build.** Before hand-writing a Utility, a Generalization, or a layer adapter, check whether a published **XF reference library for the developer's stack** already covers the need (persistence, HTTP, SQL, filesystem, server transports, retry / cache / pagination / scheduling / state machines). Resolve it **live** against the project's ecosystem registry (npm / NuGet / PyPI / Maven) per [`../_shared/libraries.md`](../_shared/libraries.md) — or ask the **`xf-library`** skill for a recommendation — and extend it rather than reinventing; hand-write only when none exists.
 
 ## Determine scope
 

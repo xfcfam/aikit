@@ -14,7 +14,7 @@ description: >
   code. For a SINGLE feature or user story (not a whole spec), use `xf-specify`.
   To analyze EXISTING code, use `xf-classify` / `xf-review`.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # XF Analyze — requirements to a verified XF design

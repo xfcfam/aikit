@@ -7,6 +7,41 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.5.0] — 2026-07-23
+
+### Added
+
+- **New skill `xf-library` — reuse advisor.** Invocable directly with "what
+  library should I use for X?": frames the need as an XF capability + L×T cell
+  (or a plain dependency to encapsulate), resolves the best-fit package **live**
+  in the developer's ecosystem (npm / NuGet / PyPI / Maven) per the
+  `_shared/libraries.md` protocol, and recommends it (with the live version and
+  the base Generalization to extend) or concludes it should be hand-written.
+  Advice-only; the build skills (`xf-implement`, `xf-scaffold`, `xf-specify`)
+  delegate the reuse question to it. Brings the plugin to **ten skills**.
+
+### Changed
+
+- **`_shared/libraries.md` — technology-agnostic, dynamic discovery.** Replaced
+  the static, npm-only package table (a maintenance trap once XF spans npm /
+  NuGet / PyPI / Maven) with a stable, model-level **capability map** plus a
+  **live per-ecosystem resolution protocol**: detect the manifest, search the
+  official XF namespace in that registry, read the current version / status from
+  the registry itself, and hand-write only when no library exists. The
+  `@xfcfam/*` npm scope is reframed as *today's reference implementation, to
+  confirm live* — not a fixed list. The "Reuse before you build" callouts in
+  `xf-implement`, `xf-scaffold` and `xf-specify` were reworded to be
+  stack-agnostic and dynamic.
+- **`xf-implement` — reuse triage before writing.** Step 4 now opens with an
+  explicit triage that consults **`xf-library`** for the components where a
+  library plausibly exists (Access adapters, server transports, cross-cutting
+  Generalizations, general-purpose Utilities) to decide reuse-vs-ad-hoc, and
+  **skips** it for inherently bespoke parts (Business domain logicals, domain
+  operations, Transfers). Degrades gracefully offline.
+- Bumped the plugin and all **ten** skill versions to **0.5.0**.
+
+---
+
 ## [0.4.0] — 2026-06-13
 
 Validator integration, ambient XF awareness, operation-level planning, and a new

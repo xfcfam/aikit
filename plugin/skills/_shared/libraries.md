@@ -1,40 +1,67 @@
-# XF reference libraries (`@xfcfam/*`)
+# XF reference libraries — discovery (technology-agnostic)
 
-Before implementing a Utility, a Generalization, or a whole layer adapter from
-scratch, **check whether a published reference library already provides it** and
-extend or compose it instead of reinventing. These packages are the official
-TypeScript reference implementation of the XF model; each is published to npm and
-depends on the core `@xfcfam/xf`. Full catalog and docs: <https://xfcfam.org>.
+Before hand-writing a Utility, a Generalization, or a whole layer adapter, check
+whether a published **XF reference library for the developer's stack** already
+covers it, and extend / compose it instead of reinventing.
+
+**There is no static package list here, on purpose.** Across npm, NuGet, PyPI,
+Maven and others, the set of packages — their versions, status and
+correspondence to a given technology — changes constantly; a baked-in catalogue
+would be stale the day after it is written and would silently misadvise. So the
+existence and version of a concrete package is **resolved live** against the
+relevant registry (below). What this file holds is only the **stable, model-level
+map** of *what kinds of reusable building block to look for*.
 
 ## Reuse rule
 
-1. Need persistence, HTTP, a filesystem, SQL, a server transport, or
-   retry / cache / pagination / scheduling / a state machine? Reach for the
-   matching `@xfcfam/*` package **first**.
-2. Extend the library's base Generalization for your layer
-   (e.g. `class UserRepository extends StatelessRepository<…>`) — don't
-   re-derive the lifecycle/injection contract by hand.
-3. Only hand-write a component when no library covers the need, and keep it in
-   the canonical folder for its L×T cell.
+1. Need persistence, HTTP, a filesystem, SQL, a server transport, or a
+   cross-cutting policy (retry / cache / pagination / scheduling / a state
+   machine / observable state)? A reference library probably already provides the
+   matching Generalization or Utility — reach for it **first**.
+2. Extend the library's base Generalization for your layer (e.g. a
+   `…Repository` base) instead of re-deriving the lifecycle / injection contract.
+3. Hand-write a component only when no library covers the need — always valid,
+   since the libraries are *conveniences, not prescriptions* — and keep it in the
+   canonical folder for its L×T cell.
 
-## Packages
+## Capability map (stable — *what* to look for)
 
-| Package | Layer · role | What it provides |
+The model anticipates these *kinds* of reusable building block. The concrete
+package name differs per ecosystem and is resolved live (next section):
+
+| Capability | XF role | Building block to look for |
 |---|---|---|
-| `@xfcfam/xf` | Core | Abstract layer Generalizations — `Repository<T>`, `Business<T>`, `View<T>` / `Service` and their `Stateless` / `Observable` / `Cacheable` / `Retryable` / `Paginated` / `Schedule` / `Validated` / `StateMachine` / `EventSourced` variants — the Injection contracts `R` / `B` / `A`, and the `XF` lifecycle orchestrator. |
-| `@xfcfam/xf-rest` | Access | REST repository over `ky`: `RestRepository` + `RetryRestRepository`; `ParseUtils` / `ReviverUtils` for XML, CSV, custom content types, and date revival. |
-| `@xfcfam/xf-fs` | Access | Filesystem over `node:fs`: `FileRepository` + its `Cached` / `Audited` variants. |
-| `@xfcfam/xf-sql` | Access | SQL over the Kysely query builder (dialect-agnostic): `DatabaseRepository` + `TransactionalDatabaseRepository`. Pair with a dialect adapter. |
-| `@xfcfam/xf-sql-postgres` | Access | PostgreSQL dialect adapter for `xf-sql` (Kysely `PostgresDialect` + `pg`; maps Postgres `SQLSTATE` to typed Exceptions). |
-| `@xfcfam/xf-server` | Interaction + Business | Transport-agnostic inbound-server contract: the abstract `ServerBusiness` / `EntryService` (registry + lifecycle + request pipeline). No transport of its own. |
-| `@xfcfam/xf-server-http` | Interaction + Business | HTTP transport over Fastify — REST · WebSocket · SSE · GraphQL on one port: `HttpServerBusiness` + `RestService` / `ObjectRestService` / `WebSocketService` / `GraphQLService`. |
-| `@xfcfam/xf-server-grpc` · `-tcp` · `-udp` | Interaction + Business | Sketches — typed transport skeletons compiled against the `xf-server` contract (not production-ready). |
+| Core abstractions | every layer | the layer Generalizations (`Repository` / `Business` / `Service` / `View`) and their stateless / observable / cacheable / retryable / paginated / scheduled / validated / state-machine variants; the `R` / `B` / `A` injection contracts; the `XF` lifecycle orchestrator |
+| HTTP / REST client | Access | a `RestRepository`-type Generalization (+ a retry variant) and content-type / date parse `*Utils` |
+| Filesystem | Access | a `FileRepository`-type Generalization (+ cached / audited variants) |
+| SQL / database | Access | a `DatabaseRepository`-type Generalization (+ a transactional variant) and per-dialect adapters |
+| Inbound server / transport | Interaction + Business | a transport-agnostic server contract + transport adapters (REST · WebSocket · SSE · GraphQL · gRPC · …) |
+| Cross-cutting policy | any layer (as a Generalization) | retry · cache · pagination · scheduling · observable state · validation · state machine |
 
-**Install pattern:** every adapter needs the core —
-`pnpm add @xfcfam/xf @xfcfam/<pkg>`.
+## Resolve concrete packages live (per ecosystem)
 
-> The library's base classes (e.g. `StatelessBusiness`, `StatelessService`) are
-> conveniences of the reference implementation, **not** prescriptions of the
-> model. The XF model prescribes only the L×T classification and the
-> descending-dependency direction; a component that achieves those with a
-> different mechanism is equally conformant.
+1. **Detect the ecosystem** from the artefact's manifest: `package.json` → npm ·
+   `*.csproj` / `*.sln` → NuGet · `pyproject.toml` / `requirements.txt` → PyPI ·
+   `pom.xml` / `build.gradle` → Maven / Gradle.
+2. **Search the official XF namespace in that registry** for the capability, and
+   read the **current version and status from the registry itself** — never from
+   memory or from this file:
+   - **npm** — `npm search @xfcfam` · `npm view @xfcfam/<pkg> version` (scope `@xfcfam/*`)
+   - **NuGet** — `dotnet package search XFCFAM` (the official XF namespace, as/when published)
+   - **PyPI** — search / `pip index versions <pkg>` in the official `xfcfam` namespace
+   - **Maven Central** — search the `org.xfcfam` group
+3. **If a library exists**, prefer it and pin the version the registry reports.
+   **If none exists for that ecosystem yet**, hand-write the component per the
+   model (equally conformant) — do not block on a missing library.
+
+> **Reference implementation today:** the model's reference libraries are
+> TypeScript, published to **npm under the `@xfcfam/*` scope** (core + REST,
+> filesystem, SQL and server adapters). Treat even that as something to **confirm
+> live** (`npm search @xfcfam`) rather than a fixed list — the namespace grows,
+> and other ecosystems (NuGet / PyPI / Maven) come online over time. Full
+> ecosystem: <https://xfcfam.org>.
+
+> The library base classes are **conveniences** of a reference implementation,
+> **not** prescriptions of the model. XF prescribes only the L×T classification
+> and the descending-dependency direction; a component that achieves those by any
+> mechanism is equally conformant.

@@ -8,7 +8,7 @@ description: >
   "how do I use R, B, A?", or any question about understanding the XF
   Architecture Model concepts, principles, or decisions.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # XF Explainer
